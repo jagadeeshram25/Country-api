@@ -1,27 +1,36 @@
-const jwt =require('jsonwebtoken')
+const jwt = require("jsonwebtoken")
 
 const auth = async(req,res,next)=>{
 
-try{
-    const token = req.header("Authorization")
+    try{
 
-if(!token){
-return res.status(400).json({
-    message:"login first"
-})
+        const authHeader = req.header("Authorization")
+
+        if(!authHeader){
+            return res.status(400).json({
+                message:"login first"
+            })
+        }
+
+        const token = authHeader.split(" ")[1]
+
+        const decode = jwt.verify(
+            token,
+            "mykeypswrd"
+        )
+
+        req.user = decode
+
+        next()
+
+    }catch(err){
+
+        console.log(err)
+
+        return res.status(401).json({
+            message:"Invalid Token"
+        })
+    }
 }
 
-const decode = jwt.verify(
-    token,
-    "mykeypswrd"
-);
-
-req.user= decode;
-next();
-
-}catch(err){
-    console.log(err)
-}
-}
-
-module.exports  = auth
+module.exports = auth
