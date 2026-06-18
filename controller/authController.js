@@ -59,7 +59,7 @@ return res.status(400).json({
         {
             id:user._id
         },
-        "mykeypswrd",
+        process.env.JWT_SECRET,
         {
             expiresIn: "7d"
         }

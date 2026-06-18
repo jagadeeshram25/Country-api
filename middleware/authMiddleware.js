@@ -16,7 +16,7 @@ const auth = async(req,res,next)=>{
 
         const decode = jwt.verify(
             token,
-            "mykeypswrd"
+            process.env.JWT_SECRET
         )
 
         req.user = decode
