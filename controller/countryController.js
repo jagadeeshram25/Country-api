@@ -1,80 +1,119 @@
-const Country = require("../models/country")
+const Country = require("../models/Country");
 
-exports.addCountry = async(req,res)=>{
-    try{
+// Add Country
+exports.addCountry = async (req, res) => {
+    try {
 
         const country = await Country.create({
-            countryName:req.body.countryName,
-            capital:req.body.capital,
-            population:req.body.population,
-            currency:req.body.currency,
-            flag:req.file ? req.file.filename : ""
-        })
+            countryName: req.body.countryName,
+            capital: req.body.capital,
+            population: req.body.population,
+            currency: req.body.currency,
+            flag: req.file ? req.file.path : ""
+        });
 
         res.status(201).json({
-            message:"Country Added",
+            message: "Country Added",
             country
-        })
+        });
 
-    }catch(err){
+    } catch (err) {
         res.status(500).json({
-            message:err.message
-        })
+            message: err.message
+        });
     }
-}
+};
 
-exports.getCountries = async(req,res)=>{
-    try{
+// Get All Countries
+exports.getCountries = async (req, res) => {
+    try {
 
-        const countries = await Country.find()
+        const countries = await Country.find();
 
         res.status(200).json({
             countries
-        })
+        });
 
-    }catch(err){
+    } catch (err) {
         res.status(500).json({
-            message:err.message
-        })
+            message: err.message
+        });
     }
-}
+};
 
-exports.updateCountry = async(req,res)=>{
-    try{
+// Get Single Country
+exports.getCountry = async (req, res) => {
+    try {
+
+        const country = await Country.findById(req.params.id);
+
+        if (!country) {
+            return res.status(404).json({
+                message: "Country not found"
+            });
+        }
+
+        res.status(200).json({
+            country
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            message: err.message
+        });
+    }
+};
+
+// Update Country
+exports.updateCountry = async (req, res) => {
+    try {
 
         const country = await Country.findByIdAndUpdate(
             req.params.id,
             req.body,
             {
-                new:true,
-                runValidators:true
+                new: true,
+                runValidators: true
             }
-        )
+        );
+
+        if (!country) {
+            return res.status(404).json({
+                message: "Country not found"
+            });
+        }
 
         res.status(200).json({
-            message:"Country Updated",
+            message: "Country Updated",
             country
-        })
+        });
 
-    }catch(err){
+    } catch (err) {
         res.status(500).json({
-            message:err.message
-        })
+            message: err.message
+        });
     }
-}
+};
 
-exports.deleteCountry = async(req,res)=>{
-    try{
+// Delete Country
+exports.deleteCountry = async (req, res) => {
+    try {
 
-        await Country.findByIdAndDelete(req.params.id)
+        const country = await Country.findByIdAndDelete(req.params.id);
+
+        if (!country) {
+            return res.status(404).json({
+                message: "Country not found"
+            });
+        }
 
         res.status(200).json({
-            message:"Country Deleted"
-        })
+            message: "Country Deleted Successfully"
+        });
 
-    }catch(err){
+    } catch (err) {
         res.status(500).json({
-            message:err.message
-        })
+            message: err.message
+        });
     }
-}
+};
