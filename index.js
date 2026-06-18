@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
     res.send("Country Information Management System API Running...");
 });
 
-const port = process.env.PORT || 3006
+const port = process.env.PORT || 3007
 
 app.listen(port,()=>{
     console.log(`server started on port ${port}`)
